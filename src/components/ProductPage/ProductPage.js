@@ -1,9 +1,11 @@
 import {useState} from 'react';
 import {Timeline, Tween} from 'react-gsap';
-import {Row,Col} from 'antd';
+import {Row,Col, Switch} from 'antd';
 import {
     ClockCircleOutlined,
 } from "@ant-design/icons";
+import { BrowserRouter as Router,Route,Link } from 'react-router-dom'
+import InputPage from './InputPage';
 function ProductPage() {
     const [angle,setAngle] = useState(0);
     const [dura,setDura] = useState(1000);
@@ -15,7 +17,9 @@ function ProductPage() {
         setAngle(0)
     }
     return (
-        <div>This is product page</div>
+        <div >
+            <Link to="/product/input">输入</Link>
+        </div>
 
     )
 }

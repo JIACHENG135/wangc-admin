@@ -20,6 +20,7 @@ import {
 } from '@ant-design/icons';
 import MainPage from './components/MainPage';
 import ProductPage from './components/ProductPage';
+import InputPage from './components/ProductPage/InputPage';
 import HrPage from './components/HrPage';
 import SalesPage from './components/SalesPage';
 import TechPage from './components/TechPage';
@@ -28,7 +29,7 @@ import FinancialPage from './components/FinancialPage';
 import FooterPage from './components/FooterPage';
 
 const { Header, Content, Footer, Sider } = Layout;
-
+const {SubMenu} = Menu;
 
 const App = () => {
   const [collapsed,setCollapsed] = useState(false);
@@ -41,9 +42,11 @@ const App = () => {
     <Sider trigger={null} collapsible collapsed={collapsed}>
       <div className="logo" />
       <Menu theme="dark" mode="inline" >
-        <Menu.Item key="1" icon={<UserOutlined />}>
-          <Link to={'/product'}>销售部</Link>
-        </Menu.Item>
+        <SubMenu key="sub1" icon={<UserOutlined></UserOutlined> } title={<Link to={'/product'}>销售部</Link>}>
+          <Menu.Item key="6">录单</Menu.Item>
+          <Menu.Item key="7">销售计划</Menu.Item>
+          <Menu.Item key="8">统计报告</Menu.Item>
+        </SubMenu>
         <Menu.Item key="2" icon={<VideoCameraOutlined />}>
           <Link to={'/financial'}>财务部</Link>
         </Menu.Item>
@@ -71,6 +74,7 @@ const App = () => {
           margin: '24px 16px',
           padding: 24,
           minHeight: 280,
+          overflowY: 'auto',
         }}
       >
         <Switch>
@@ -81,6 +85,7 @@ const App = () => {
               <Route exact path='/hr' component={HrPage} />
               <Route exact path='/tech' component={TechPage} />
               <Route exact path='/sales' component={SalesPage} />
+              <Route exact path="/product/input" component={InputPage}/>
         </Switch>
       </Content>
 
