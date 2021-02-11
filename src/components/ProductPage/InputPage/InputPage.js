@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, Children } from 'react';
 import { Form, Input, InputNumber, Modal, Button, Avatar, Typography,DatePicker,Tooltip,Select,Row,Col } from 'antd';
 import { SmileOutlined, UserOutlined,QuestionCircleOutlined,PlusOutlined } from '@ant-design/icons';
 const layout = {
@@ -28,8 +28,8 @@ const addIcontLayout = {
 }
 
 const categories = [
-  { label: '家禽类制品', value: '0' },
-  { label: '蛋类制品', value: '1' },
+  { label: '家禽类制品', value: 0 },
+  { label: '蛋类制品', value: 1 },
 ];
 const chickenOptions = [
   { label: '黑良凤', value: '黑良凤' },
@@ -37,7 +37,8 @@ const chickenOptions = [
   { label: '试验鸡', value: '试验鸡' },
 ]
 const eggOptions = [
-  { label: '鸡蛋', value: '鸡蛋' },
+  { label: '油鸡蛋', value: '油蛋' },
+  { label: '试验鸡蛋', value: '试验鸡蛋' },
 ]
 
 // reset form fields when modal is form, closed
@@ -97,6 +98,17 @@ const ModalChickenForm = ({ visible, onCancel }) => {
         >
           <InputNumber />
         </Form.Item>
+        <Form.Item
+          name="number"
+          label="数量"
+          rules={[
+            {
+              required: true,
+            },
+          ]}
+        >
+          <InputNumber />
+        </Form.Item>
       </Form>
     </Modal>
   );
@@ -104,6 +116,7 @@ const ModalChickenForm = ({ visible, onCancel }) => {
 
 const ModalEggForm = ({ visible, onCancel }) => {
   const [form] = Form.useForm();
+  const {Option} = Select;
   useResetFormOnCloseModal({
     form,
     visible,
@@ -117,8 +130,36 @@ const ModalEggForm = ({ visible, onCancel }) => {
     <Modal title="蛋制品" visible={visible} onOk={onOk} onCancel={onCancel}>
       <Form form={form} layout="vertical" name="eggForm">
         <Form.Item
+            name="eggs"
+            label="蛋类名称"
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+          >
+          <Select>
+            {(eggOptions.map(item => (
+              <Option key={item.value} value={item.value}>
+                {item.label}
+              </Option>
+            )))}
+          </Select>
+        </Form.Item>
+        <Form.Item
           name="number"
           label="数量"
+          rules={[
+            {
+              required: true,
+            },
+          ]}
+        >
+          <InputNumber />
+        </Form.Item>
+        <Form.Item
+          name="price"
+          label="价格"
           rules={[
             {
               required: true,
@@ -157,9 +198,12 @@ function InputPage() {
     };
   
     const handleChange = (value) => {
-      console.log(value)
       setCate(value)
     };
+
+    const deductRealValue = (value) => {
+      setRealValue(realValue - value);
+    }
 
     return (
         <>
@@ -168,23 +212,37 @@ function InputPage() {
             if (name === 'chickenForm') {
               const { basicForm } = forms;
               const chicken = basicForm.getFieldValue('chicken') || [];
+              
               basicForm.setFieldsValue({
                 chicken: [...chicken, values],
               });
+              const newChicken = basicForm.getFieldValue('chicken') || [];
+              var curvalue = realValue;
+              for(let i=0;i<newChicken.length;i++){
+                curvalue = curvalue + newChicken[i].number*newChicken[i].price;
+              }
+              setRealValue(curvalue)
               setChickVisible(false);
             }
             if (name === 'eggForm') {
               const { basicForm } = forms;
-              const eggnumber = basicForm.getFieldValue('egg') || [];
+              const eggs = basicForm.getFieldValue('eggs') || [];
+              console.log(eggs)
               basicForm.setFieldsValue({
-                eggnumber: eggnumber+values,
+                eggs: [...eggs, values],
               });
-              setChickVisible(false);
+              const newEggs = basicForm.getFieldValue('eggs') || [];
+              var curvalue = realValue;
+              for(let i=0;i<newEggs.length;i++){
+                curvalue = curvalue + newEggs[i].number*newEggs[i].price;
+              }
+              setRealValue(curvalue)
+              setEggVisible(false);
             }
           }}
         >
           <Form {...layout} name="basicForm" onFinish={onFinish}>
-            <Form.Item name="date-picker" label="日期">
+            <Form.Item name="date-picker" label="日期" required={true}>
                 <DatePicker />
             </Form.Item>
 
@@ -210,14 +268,13 @@ function InputPage() {
             >
               {({ getFieldValue }) => {
                 const chicken = getFieldValue('chicken') || [];
-                const eggnumber = getFieldValue('egg') || 0;
+                const eggs = getFieldValue('eggs') || [];
                 const chickenText = chicken.length ? (
                   <ul>
                     {chicken.map((chick, index) => (
-                      <li key={index} className="user">
-                        <Avatar icon={<UserOutlined />} />
-                        {chick.chicken} - {chick.price}
-                      </li>
+                      <Typography.Text className="ant-form-text" type="secondary">
+                        <SmileOutlined /> {chick.chicken} - {chick.price}
+                      </Typography.Text>
                     ))}
                   </ul>
                 ) : (
@@ -225,26 +282,35 @@ function InputPage() {
                      <SmileOutlined /> 还未输入禽类商品 
                   </Typography.Text>
                 );
-                const eggText = eggnumber ? (`已输入蛋${eggnumber}枚`):(
+                const eggText = eggs.length ? (
+                  <ul>
+                    {eggs.map((egg, index) => (
+                      <Typography.Text className="ant-form-text" type="secondary">
+                        <SmileOutlined /> {egg.eggs} - {egg.number} 
+                      </Typography.Text>
+                    ))}
+                  </ul>
+                ):(
                   <Typography.Text className="ant-form-text" type="secondary">
                    <SmileOutlined /> 还未输入蛋类商品 
                   </Typography.Text>
                 )
-                return <><p>{chickenText}</p><p>{eggText}</p></>
+                return <><span>{chickenText}{eggText}</span></>
               }}
             </Form.Item>
             <Row>
               <Col  {...addIcontLayout}>
                 <Form.Item>
 
-                      <Button type="dashed" onClick={cate ? showEggModal : showChickenModal} block icon={<PlusOutlined />}>
+                      <Button type="dashed" onClick={cate===1 ? showEggModal : showChickenModal} block icon={<PlusOutlined />}>
                         添加商品
                       </Button>
                 </Form.Item>
               </Col>
             </Row>
-            <Form.Item label="订单应收金额" name="real-sum">
-              <InputNumber value={realValue} defaultValue={0}  />
+
+            <Form.Item label="订单优惠金额" name="discount">
+              <InputNumber onChange={deductRealValue}/>
             </Form.Item>
             <Form.Item
               name="discount-value"
@@ -265,6 +331,9 @@ function InputPage() {
               ]}
             >
               <Input />
+            </Form.Item>
+            <Form.Item label="订单应收金额" name="real-sum">
+              {realValue}
             </Form.Item>
             <Row>
               <Col {...addIcontLayout}>
