@@ -44,7 +44,7 @@ const App = () => {
       <div className="logo" />
       <Menu theme="dark" mode="inline" >
         <SubMenu key="sub1" icon={<><FontAwesomeIcon icon={faCartPlus} /></> } title={<Link to={'/sales'}><span style={{paddingLeft: '10px'}}>销售部</span></Link>}>
-          <Menu.Item key="1"><Link to={'/product/input'}>录单</Link></Menu.Item>
+          <Menu.Item key="1"><Link to={'/sales/input'}>录单</Link></Menu.Item>
           <Menu.Item key="2">销售计划</Menu.Item>
           <Menu.Item key="3">统计报告</Menu.Item>
         </SubMenu>
@@ -106,7 +106,7 @@ const App = () => {
               <Route exact path='/hr' component={HrPage} />
               <Route exact path='/tech' component={TechPage} />
               <Route exact path='/sales' component={SalesPage} />
-              <Route exact path="/product/input" component={InputPage}/>
+              <Route exact path="/sales/input" component={InputPage}/>
         </Switch>
       </Content>
 

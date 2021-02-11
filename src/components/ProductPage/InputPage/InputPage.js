@@ -1,145 +1,191 @@
-import {useState} from 'react';
-import {
-  Form,
-  Input,
-  Row,
-  Col,
-  DatePicker,
-  Slider,
-  InputNumber,
-  Space,
-  Select,
-  Button,
-  Tooltip
-} from 'antd';
-import { MinusCircleOutlined, PlusOutlined, QuestionCircleOutlined } from '@ant-design/icons';
-
-
-const { Option } = Select;
-const categories = [
-  { label: '家禽类制品', value: '家禽类制品' },
-  { label: '畜牧类制品', value: '畜牧类制品' },
-];
-const sights = {
-  家禽类制品: ['黑良凤', '油鸡','试验鸡','鸡蛋'],
-  畜牧类制品: ['Oriental Pearl', 'The Bund'],
-};
-const formItemLayout = {
+import React, { useState, useEffect, useRef } from 'react';
+import { Form, Input, InputNumber, Modal, Button, Avatar, Typography,DatePicker,Tooltip,Select,Row,Col } from 'antd';
+import { SmileOutlined, UserOutlined,QuestionCircleOutlined,PlusOutlined } from '@ant-design/icons';
+const layout = {
   labelCol: {
-    xs: { span: 24 },
-    sm: { span: 4 },
+    span: 4,
   },
   wrapperCol: {
-    xs: { span: 24 },
-    sm: { span: 16 },
+    span: 16,
   },
 };
-
-
-const mainFormLayout = {
-  // xxl:{
-  //   span: 20
-  // },
-  // xl:{
-  //   span: 24
-  // },
-  // lg:{
-  //   span: 22
-  // },
-  // md:{
-  //   span: 23
-  // },
-  sm:{
-    span: 24
-  },
-  // xs:{
-  //   span: 24
-  // }
-}
-const rightFormLayout = {
-  // xxl:{
-  //   span: 4
-  // },
-  // xl:{
-  //   span: 1
-  // },
-  // lg:{
-  //   span: 2
-  // },
-  // md:{
-  //   span: 1
-  // },
-  sm:{
-    span: 16
-  },
-  // xs:{
-  //   span: 0
-  // }
-}
-
-
-const config = {
-  rules: [
-    {
-      type: 'object',
-      required: true,
-      message: 'Please select time!',
-    },
-  ],
-};
-
-
-const tailFormItemLayout = {
+const tailLayout = {
   wrapperCol: {
-    xs: {
-      span: 24,
-      offset: 0,
-    },
-    sm: {
-      span: 16,
-      offset: 4,
-    },
+    offset: 4,
+    span: 16,
   },
 };
 
+const addIcontLayout = {
+  sm:{
+    span: 16,
+    offset: 4
+  },
+  xs:{
+    span:18,
+    offset:0
+  }
+}
 
+const categories = [
+  { label: '家禽类制品', value: '0' },
+  { label: '蛋类制品', value: '1' },
+];
+const chickenOptions = [
+  { label: '黑良凤', value: '黑良凤' },
+  { label: '油鸡', value: '油鸡' },
+  { label: '试验鸡', value: '试验鸡' },
+]
+const eggOptions = [
+  { label: '鸡蛋', value: '鸡蛋' },
+]
+
+// reset form fields when modal is form, closed
+const useResetFormOnCloseModal = ({ form, visible }) => {
+  const prevVisibleRef = useRef();
+  useEffect(() => {
+    prevVisibleRef.current = visible;
+  }, [visible]);
+  const prevVisible = prevVisibleRef.current;
+  useEffect(() => {
+    if (!visible && prevVisible) {
+      form.resetFields();
+    }
+  }, [visible]);
+};
+
+const ModalChickenForm = ({ visible, onCancel }) => {
+  const [form] = Form.useForm();
+  const {Option} = Select;
+  useResetFormOnCloseModal({
+    form,
+    visible,
+  });
+
+  const onOk = () => {
+    form.submit();
+  };
+
+  return (
+    <Modal title="家禽制品" visible={visible} onOk={onOk} onCancel={onCancel}>
+      <Form form={form} layout="vertical" name="chickenForm">
+        <Form.Item
+          name="chicken"
+          label="商品名称"
+          rules={[
+            {
+              required: true,
+            },
+          ]}
+        >
+          <Select>
+            {(chickenOptions.map(item => (
+              <Option key={item.value} value={item.value}>
+                {item.label}
+              </Option>
+            )))}
+          </Select>
+        </Form.Item>
+        <Form.Item
+          name="price"
+          label="价格"
+          rules={[
+            {
+              required: true,
+            },
+          ]}
+        >
+          <InputNumber />
+        </Form.Item>
+      </Form>
+    </Modal>
+  );
+};
+
+const ModalEggForm = ({ visible, onCancel }) => {
+  const [form] = Form.useForm();
+  useResetFormOnCloseModal({
+    form,
+    visible,
+  });
+
+  const onOk = () => {
+    form.submit();
+  };
+
+  return (
+    <Modal title="蛋制品" visible={visible} onOk={onOk} onCancel={onCancel}>
+      <Form form={form} layout="vertical" name="eggForm">
+        <Form.Item
+          name="number"
+          label="数量"
+          rules={[
+            {
+              required: true,
+            },
+          ]}
+        >
+          <InputNumber />
+        </Form.Item>
+      </Form>
+    </Modal>
+  );
+};
 
 function InputPage() {
-  const [form] = Form.useForm();
-  const [inputValue, setInputvalue] = useState(100);
-  const [realValue, setRealValue] = useState(0);
-  const onFinish = (values) => {
-    console.log('Received values of form: ', values);
-  };
-  const onChangeInputValue = (value) => {
-    setInputvalue(value)
-  };
-  const handleChange = () => {
-    form.setFieldsValue({ sights: [] });
-  };
+    const [chickvisible, setChickVisible] = useState(false);
+    const [eggvisible, setEggVisible] = useState(false);
+    const [cate, setCate] = useState(0);
+    const [realValue, setRealValue] = useState(0);
 
-  // 数量输入控件
-
-
-
+    const showChickenModal = () => {
+      setChickVisible(true);
+    };
+  
+    const hideChickModal = () => {
+      setChickVisible(false);
+    };
+    const showEggModal = () => {
+      setEggVisible(true);
+    };
+  
+    const hideEggModal = () => {
+      setEggVisible(false);
+    };
+    const onFinish = (values) => {
+      console.log('Finish:', values);
+    };
+  
+    const handleChange = (value) => {
+      console.log(value)
+      setCate(value)
+    };
 
     return (
-      <Row >
-
-        <Col {...mainFormLayout}>
-          <Form
-            {...formItemLayout}
-            form={form}
-            name="register"
-            onFinish={onFinish}
-            initialValues={{
-              residence: ['zhejiang', 'hangzhou', 'xihu'],
-              prefix: '86',
-            }}
-            scrollToFirstError
-          >
-            <Form.Item name="date-picker" label="日期" {...config}>
-              <DatePicker />
+        <>
+        <Form.Provider
+          onFormFinish={(name, { values, forms }) => {
+            if (name === 'chickenForm') {
+              const { basicForm } = forms;
+              const chicken = basicForm.getFieldValue('chicken') || [];
+              basicForm.setFieldsValue({
+                chicken: [...chicken, values],
+              });
+              setChickVisible(false);
+            }
+            if (name === 'eggForm') {
+              const { basicForm } = forms;
+              const eggnumber = basicForm.getFieldValue('egg') || [];
+              basicForm.setFieldsValue({
+                eggnumber: eggnumber+values,
+              });
+              setChickVisible(false);
+            }
+          }}
+        >
+          <Form {...layout} name="basicForm" onFinish={onFinish}>
+            <Form.Item name="date-picker" label="日期">
+                <DatePicker />
             </Form.Item>
 
             <Form.Item
@@ -155,107 +201,46 @@ function InputPage() {
             >
               <Input />
             </Form.Item>
-            {/* <Form.Item name="slider" label="订单数量">
-              <Row>
-                <Col span={24}>
-                  <Slider
-                    marks={{
-                      1: '1',
-                      5000: '5000',
-                      50000: '50000',
-                      100000: '100000',
-                    }}
-                    min={1}
-                    max={100000}
-                    onChange={onChangeInputValue}
-                    value={inputValue}
-                  />
-                </Col>
-                <Col span={4}>
-                  <InputNumber
-                    min={1}
-                    max={100000}
-                    style={{ margin: '0 16px' }}
-                    value={inputValue}
-                    onChange={onChangeInputValue}
-                  />
-                </Col>
-              </Row>
-            </Form.Item> */}
             <Form.Item name="categories" label="商品种类" rules={[{ required: true, message: '请选择商品种类' }]}>
               <Select options={categories} onChange={handleChange} />
             </Form.Item>
+            <Form.Item
+              label="已输入商品列表"
+              shouldUpdate={(prevValues, curValues) => prevValues.users !== curValues.users}
+            >
+              {({ getFieldValue }) => {
+                const chicken = getFieldValue('chicken') || [];
+                const eggnumber = getFieldValue('egg') || 0;
+                const chickenText = chicken.length ? (
+                  <ul>
+                    {chicken.map((chick, index) => (
+                      <li key={index} className="user">
+                        <Avatar icon={<UserOutlined />} />
+                        {chick.chicken} - {chick.price}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <Typography.Text className="ant-form-text" type="secondary">
+                     <SmileOutlined /> 还未输入禽类商品 
+                  </Typography.Text>
+                );
+                const eggText = eggnumber ? (`已输入蛋${eggnumber}枚`):(
+                  <Typography.Text className="ant-form-text" type="secondary">
+                   <SmileOutlined /> 还未输入蛋类商品 
+                  </Typography.Text>
+                )
+                return <><p>{chickenText}</p><p>{eggText}</p></>
+              }}
+            </Form.Item>
             <Row>
-              <Col sm={4}>
-              </Col>
-              <Col sm={18}>
-                <Form.List className="" name="sights">
-                  {(fields, { add, remove }) => (
-                    <>
-                      {fields.map(field => (
-                        <Space key={field.key} align="baseline">
-                          <Row>
-                            <Col span={24}>
-                              <Form.Item
-                                noStyle
-                                shouldUpdate={(prevValues, curValues) =>
-                                  prevValues.area !== curValues.area || prevValues.sights !== curValues.sights
-                                }
-                              >
-                                {() => (
-                                  <Form.Item
-                                    {...field}
-                                    label="商品名称"
-                                    name={[field.name, 'sight']}
-                                    fieldKey={[field.fieldKey, 'sight']}
-                                    rules={[{ required: true, message: '请输入商品名称' }]}
-                                  >
-                                    <Select disabled={!form.getFieldValue('categories')} style={{ width: 130 }}>
-                                      {(sights[form.getFieldValue('categories')] || []).map(item => (
-                                        <Option key={item} value={item}>
-                                          {item}
-                                        </Option>
-                                      ))}
-                                    </Select>
-                                  </Form.Item>
-                                )}
-                              </Form.Item>
-                            </Col>
-                            <Col span={24}>
-                              <Form.Item
-                                {...field}
-                                label="价格"
-                                name={[field.name, 'price']}
-                                fieldKey={[field.fieldKey, 'price']}
-                                rules={[{ required: true, message: '请输入价格' }]}
-                              >
-                                <InputNumber value={realValue} defaultValue={0}  />
-                              </Form.Item>
-                            </Col>
-                            <Col span={24}>
-                              <Form.Item
-                                {...field}
-                                label="重量"
-                                name={[field.name, 'weight']}
-                                fieldKey={[field.fieldKey, 'weight']}
-                                rules={[{ required: false}]}
-                              >
-                                <InputNumber value={realValue} defaultValue={0}  />
-                              </Form.Item>
-                            </Col>
-                          </Row>
-                          <MinusCircleOutlined onClick={() => remove(field.name)} />
-                        </Space>
-                      ))}
+              <Col  {...addIcontLayout}>
+                <Form.Item>
 
-                      <Form.Item>
-                        <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
-                          添加商品
-                        </Button>
-                      </Form.Item>
-                    </>
-                  )}
-                </Form.List>
+                      <Button type="dashed" onClick={cate ? showEggModal : showChickenModal} block icon={<PlusOutlined />}>
+                        添加商品
+                      </Button>
+                </Form.Item>
               </Col>
             </Row>
             <Form.Item label="订单应收金额" name="real-sum">
@@ -281,17 +266,23 @@ function InputPage() {
             >
               <Input />
             </Form.Item>
-            <Form.Item {...tailFormItemLayout}>
-              <Button type="primary" htmlType="submit">
-                提交
-              </Button>
-            </Form.Item>
+            <Row>
+              <Col {...addIcontLayout}>
+                <Form.Item  >
+                  <Button type="primary" htmlType="submit">
+                    提交
+                  </Button>
+                </Form.Item>
+              </Col>
+            </Row>
+
           </Form>
-        </Col>
-        <Col {...rightFormLayout}></Col>
-      </Row>
+  
+          <ModalChickenForm visible={chickvisible} onCancel={hideChickModal} />
+          <ModalEggForm visible={eggvisible} onCancel={hideEggModal} />
 
-
+        </Form.Provider>
+      </>
     )
 }
 export default InputPage;
