@@ -43,12 +43,12 @@ const App = () => {
     <Sider trigger={null} collapsible collapsed={collapsed}>
       <div className="logo" />
       <Menu theme="dark" mode="inline" >
-        <SubMenu key="sub1" icon={<><FontAwesomeIcon icon={faCartPlus} /></> } title={<Link to={'/sales'}><span style={{paddingLeft: '10px'}}>销售部</span></Link>}>
-          <Menu.Item key="1"><Link to={'/sales/input'}>录单</Link></Menu.Item>
+        <SubMenu key="sub1" icon={<><FontAwesomeIcon icon={faCartPlus} /></> } title={collapsed ? '':<Link to={'/sales'}><span style={{paddingLeft: '10px'}}>销售部</span></Link>}>
+          <Menu.Item key="1"><Link to={'/product/input'}>录单</Link></Menu.Item>
           <Menu.Item key="2">销售计划</Menu.Item>
           <Menu.Item key="3">统计报告</Menu.Item>
         </SubMenu>
-        <SubMenu key="sub2" icon={<><FontAwesomeIcon icon={faMoneyCheck} /></> } title={<Link to={'/financial'}><span style={{paddingLeft: '10px'}}>财务部</span></Link>}>
+        <SubMenu key="sub2" icon={<><FontAwesomeIcon icon={faMoneyCheck} /></> } title={collapsed ? '':<Link to={'/financial'}><span style={{paddingLeft: '10px'}}>财务部</span></Link>}>
           <SubMenu key="sub3" title="税务">
             <Menu.Item key="4">资产负债表</Menu.Item>
             <Menu.Item key="5">利润表</Menu.Item>
@@ -61,7 +61,7 @@ const App = () => {
           </SubMenu>
         </SubMenu>
 
-        <SubMenu key="sub5" icon={<><FontAwesomeIcon icon={faIndustry} /></> } title={<Link to={'/product'}><span style={{paddingLeft: '13px'}}>生产部</span></Link>}>
+        <SubMenu key="sub5" icon={<><FontAwesomeIcon icon={faIndustry} /></> } title={collapsed ? '':<Link to={'/product'}><span style={{paddingLeft: '13px'}}>生产部</span></Link>}>
           <SubMenu key="sub6" title="种植基地">
             <Menu.Item key="10">填一次</Menu.Item>
             <Menu.Item key="11">日常填</Menu.Item>

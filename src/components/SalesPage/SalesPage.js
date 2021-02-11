@@ -1,21 +1,32 @@
-import {useState} from 'react';
-import {Timeline, Tween} from 'react-gsap';
-import {Row,Col} from 'antd';
-import {
-    ClockCircleOutlined,
-} from "@ant-design/icons";
+import {Collapse} from 'antd';
+import { faUserEdit,faBook,faChartLine } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 function SalesPage() {
-    const [angle,setAngle] = useState(0);
-    const [dura,setDura] = useState(1000);
-    const onMouseEnter = () => {
-        console.log("Mouse in and ")
-        setAngle(90)
-    }
-    const onMouseLeave = () => {
-        setAngle(0)
-    }
+
+    function callback(key) {
+        console.log(key);
+      }
+
+    const { Panel } = Collapse;
     return (
-        <div>This is Sales page</div>
+        <div >
+            <Collapse defaultActiveKey={['1']} onChange={callback}>
+                <Panel header={<><FontAwesomeIcon icon={faUserEdit} /><span style={{paddingLeft: '10px'}}>录单</span></>} key="1">
+                <p>
+                    
+                </p>
+                </Panel>
+                <Panel header={<><FontAwesomeIcon icon={faBook} /><span style={{paddingLeft: '10px'}}>销售计划</span></>} key="2">
+                <p>
+                </p>
+                </Panel>
+                <Panel header={<><FontAwesomeIcon icon={faChartLine} /><span style={{paddingLeft: '10px'}}>统计报告</span></>}key="3">
+                <p>
+                </p>
+                </Panel>
+            </Collapse>
+        </div>
 
     )
 }
