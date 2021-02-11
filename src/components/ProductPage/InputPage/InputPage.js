@@ -113,7 +113,7 @@ function InputPage() {
   };
   const onChangeInputValue = (value) => {
     setInputvalue(value)
-  }
+  };
   const handleChange = () => {
     form.setFieldsValue({ sights: [] });
   };
