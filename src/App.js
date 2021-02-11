@@ -27,7 +27,6 @@ import TechPage from './components/TechPage';
 import FinancialPage from './components/FinancialPage';
 
 import FooterPage from './components/FooterPage';
-
 const { Header, Content, Footer, Sider } = Layout;
 const {SubMenu} = Menu;
 
