@@ -27,7 +27,7 @@ const sights = {
 const formItemLayout = {
   labelCol: {
     xs: { span: 24 },
-    sm: { span: 8 },
+    sm: { span: 4 },
   },
   wrapperCol: {
     xs: { span: 24 },
@@ -57,21 +57,21 @@ const mainFormLayout = {
   // }
 }
 const rightFormLayout = {
-  xxl:{
-    span: 4
-  },
-  xl:{
-    span: 1
-  },
+  // xxl:{
+  //   span: 4
+  // },
+  // xl:{
+  //   span: 1
+  // },
   // lg:{
   //   span: 2
   // },
   // md:{
   //   span: 1
   // },
-  // sm:{
-  //   span: 0
-  // },
+  sm:{
+    span: 0
+  },
   // xs:{
   //   span: 0
   // }
@@ -97,7 +97,7 @@ const tailFormItemLayout = {
     },
     sm: {
       span: 16,
-      offset: 8,
+      offset: 4,
     },
   },
 };
@@ -186,9 +186,9 @@ function InputPage() {
               <Select options={categories} onChange={handleChange} />
             </Form.Item>
             <Row>
-              <Col sm={8}>
+              <Col sm={4}>
               </Col>
-              <Col sm={16}>
+              <Col sm={18}>
                 <Form.List className="" name="sights">
                   {(fields, { add, remove }) => (
                     <>
@@ -288,7 +288,7 @@ function InputPage() {
             </Form.Item>
           </Form>
         </Col>
-        {/* <Col {...rightFormLayout}></Col> */}
+        <Col {...rightFormLayout}></Col>
       </Row>
 
 
