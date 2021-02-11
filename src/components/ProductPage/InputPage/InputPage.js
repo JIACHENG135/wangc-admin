@@ -40,18 +40,18 @@ const mainFormLayout = {
   // xxl:{
   //   span: 20
   // },
-  xl:{
-    span: 24
-  },
+  // xl:{
+  //   span: 24
+  // },
   // lg:{
   //   span: 22
   // },
   // md:{
   //   span: 23
   // },
-  // sm:{
-  //   span: 24
-  // },
+  sm:{
+    span: 24
+  },
   // xs:{
   //   span: 24
   // }
@@ -70,7 +70,7 @@ const rightFormLayout = {
   //   span: 1
   // },
   sm:{
-    span: 0
+    span: 16
   },
   // xs:{
   //   span: 0
