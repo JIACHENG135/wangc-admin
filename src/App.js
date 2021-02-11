@@ -18,6 +18,8 @@ import {
   VideoCameraOutlined,
   UploadOutlined,
 } from '@ant-design/icons';
+import { faCartPlus,faMoneyCheck,faIndustry,faUserFriends,faLaptop } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import MainPage from './components/MainPage';
 import ProductPage from './components/ProductPage';
 import InputPage from './components/ProductPage/InputPage';
@@ -41,22 +43,42 @@ const App = () => {
     <Sider trigger={null} collapsible collapsed={collapsed}>
       <div className="logo" />
       <Menu theme="dark" mode="inline" >
-        <SubMenu key="sub1" icon={<UserOutlined></UserOutlined> } title={<Link to={'/product'}>销售部</Link>}>
-          <Menu.Item key="6">录单</Menu.Item>
-          <Menu.Item key="7">销售计划</Menu.Item>
-          <Menu.Item key="8">统计报告</Menu.Item>
+        <SubMenu key="sub1" icon={<><FontAwesomeIcon icon={faCartPlus} /></> } title={<Link to={'/sales'}><span style={{paddingLeft: '10px'}}>销售部</span></Link>}>
+          <Menu.Item key="1"><Link to={'/product/input'}>录单</Link></Menu.Item>
+          <Menu.Item key="2">销售计划</Menu.Item>
+          <Menu.Item key="3">统计报告</Menu.Item>
         </SubMenu>
-        <Menu.Item key="2" icon={<VideoCameraOutlined />}>
-          <Link to={'/financial'}>财务部</Link>
-        </Menu.Item>
-        <Menu.Item key="3" icon={<UploadOutlined />}>
+        <SubMenu key="sub2" icon={<><FontAwesomeIcon icon={faMoneyCheck} /></> } title={<Link to={'/financial'}><span style={{paddingLeft: '10px'}}>财务部</span></Link>}>
+          <SubMenu key="sub3" title="税务">
+            <Menu.Item key="4">资产负债表</Menu.Item>
+            <Menu.Item key="5">利润表</Menu.Item>
+            <Menu.Item key="6">现金流量表</Menu.Item>
+          </SubMenu>
+          <SubMenu key="sub4" title="内部登记表">
+            <Menu.Item key="7">科目余额表</Menu.Item>
+            <Menu.Item key="8">费用登记表</Menu.Item>
+            <Menu.Item key="9">饲料及鸡登记表</Menu.Item>
+          </SubMenu>
+        </SubMenu>
+
+        <SubMenu key="sub5" icon={<><FontAwesomeIcon icon={faIndustry} /></> } title={<Link to={'/product'}><span style={{paddingLeft: '13px'}}>生产部</span></Link>}>
+          <SubMenu key="sub6" title="种植基地">
+            <Menu.Item key="10">填一次</Menu.Item>
+            <Menu.Item key="11">日常填</Menu.Item>
+            <Menu.Item key="12">生产报告</Menu.Item>
+          </SubMenu>
+          <SubMenu key="sub7" title="养殖基地">
+            <Menu.Item key="13">饲料</Menu.Item>
+            <Menu.Item key="14">库存及饲养</Menu.Item>
+            <Menu.Item key="15">生产报告</Menu.Item>
+          </SubMenu>
+
+        </SubMenu>
+        <Menu.Item key="16" icon={<FontAwesomeIcon icon={faUserFriends} /> } >
           <Link to={'/hr'}>人力资源部</Link>
         </Menu.Item>
-        <Menu.Item key="4" icon={<UploadOutlined />}>
+        <Menu.Item key="17" icon={<FontAwesomeIcon icon={faLaptop} /> } >
           <Link to={'/tech'}>技术部</Link>
-        </Menu.Item>
-        <Menu.Item key="5" icon={<UploadOutlined />}>
-          <Link to={'/sales'}>销售部</Link>
         </Menu.Item>
       </Menu>
     </Sider>
